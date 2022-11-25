@@ -39,7 +39,7 @@ then appends to it in the next iteration.
 ## Example `save_csv()`
 
 Write csv file with `save_csv`. The function will automatically create a
-new csv or append the file if it already does.
+new csv or append the file if it already does exist.
 
 ``` r
 save_csv(cars, "cars.csv")
@@ -57,14 +57,14 @@ save_csv(cars, "data/cars.csv")
 ## Example `save_lines()`
 
 Write text file with `save_lines`. The function will automatically
-create a new text file or append the file if it already does.
+create a new text file or append the file if it already does exist.
 
 ``` r
 save_lines(names(cars), "lines.txt")
 ```
 
 You can also create a folder (if it doesn’t exist yet) before it saves
-the csv.
+the text file.
 
 This example creates the “`txt`” folder first, then saves the file:
 
