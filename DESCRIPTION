@@ -12,3 +12,5 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.0
+URL: https://github.com/favstats/appendornot
+BugReports: https://github.com/favstats/appendornot/issues
