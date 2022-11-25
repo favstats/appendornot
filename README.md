@@ -11,48 +11,63 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/appendornot)](https://CRAN.R-project.org/package=appendornot)
 <!-- badges: end -->
 
-The goal of appendornot is to …
+The goal of `appendornot` is to provide easy access to writing and
+appending csv or text files.
 
 ## Installation
 
-You can install the development version of appendornot like so:
+You can install the development version of `appendornot` like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+## install.packages("remotes")
+remotes::install_github("favstats/appendornot)
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+## Load Library
 
 ``` r
 library(appendornot)
-## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## Motivation for `appendornot`
+
+I often find myself in the situation where I am scraping data and I want
+to keep appending some data to a file. However, I also want to make it
+so that it creates the file in the first place if it doesn’t exist yet,
+then appends to it in the next iteration.
+
+## Example `save_csv()`
+
+Write csv file with `save_csv`. The function will automatically create a
+new csv or append the file if it already does.
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+save_csv(cars, "cars.csv")
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+You can also create a folder (if it doesn’t exist yet) before it saves
+the csv.
 
-You can also embed plots, for example:
+This example creates the “`data`” folder first, then saves the file:
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+``` r
+save_csv(cars, "data/cars.csv")
+```
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+## Example `save_lines()`
+
+Write text file with `save_lines`. The function will automatically
+create a new text file or append the file if it already does.
+
+``` r
+save_lines(names(cars), "lines.txt")
+```
+
+You can also create a folder (if it doesn’t exist yet) before it saves
+the csv.
+
+This example creates the “`txt`” folder first, then saves the file:
+
+``` r
+save_lines(names(cars),  "txt/lines.txt")
+```

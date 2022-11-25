@@ -1,16 +1,21 @@
 Package: appendornot
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Append CSV And Text Files Automatically If They Already Exist
+Version: 0.0.0.9500
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Fabio", "Votta", , "fabio.votta@gmail.com", role = c("aut", "cre"),
+           comment = "")
+Description: I often find myself in the situation where I am scraping data and I want to keep appending some data to a file. However, I also want to make it so that it creates the file in the first place if it doesn't exist yet, then appends to it in the next iteration..
 License: MIT + file LICENSE
+URL: https://github.com/favstats/appendornot
+BugReports: https://github.com/favstats/appendornot/issues
+Imports: 
+    magrittr,
+    purrr,
+    readr,
+    stringr
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.0
-URL: https://github.com/favstats/appendornot
-BugReports: https://github.com/favstats/appendornot/issues
+RoxygenNote: 7.2.2
