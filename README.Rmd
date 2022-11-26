@@ -28,7 +28,7 @@ You can install the development version of `appendornot` like so:
 
 ``` r
 ## install.packages("remotes")
-remotes::install_github("favstats/appendornot)
+remotes::install_github("favstats/appendornot")
 ```
 
 ## Load Library
