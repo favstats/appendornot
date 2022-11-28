@@ -54,6 +54,29 @@ This example creates the “`data`” folder first, then saves the file:
 save_csv(cars, "data/cars.csv")
 ```
 
+### Different order and new variables to be appended (or are missing)
+
+Note: `save_csv` will automatically handle column order and column names
+that may not be present/are being added to the (appended) data.
+
+``` r
+## this data to be appended has a new column 
+new_column_dat <- cars %>% mutate(thisisnownew = "hello")
+
+## this is a different order than the original dataset
+different_order <- cars %>% select(dist, speed)
+
+## this is a new column with a different order and missing a variable that is already there
+different_order_newcolumn <- new_column_dat %>% select(dist, thisisnownew)
+```
+
+All of these cases will be automatically handled by the `save_csv`
+function:
+
+``` r
+save_csv(cars, "cars.csv")
+```
+
 ## Example `save_lines()`
 
 Write text file with `save_lines`. The function will automatically
