@@ -61,6 +61,7 @@ This example creates the "`data`" folder first, then saves the file:
 save_csv(cars, "data/cars.csv")
 ```
 
+Note: `save_csv` will automatically handle column order and column names that may not be present/are being added to the (appended) data.
 
 ## Example `save_lines()`
 

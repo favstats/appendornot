@@ -1,6 +1,6 @@
 Package: appendornot
 Title: Append CSV And Text Files Automatically If They Already Exist
-Version: 0.0.0.9500
+Version: 0.0.0.9900
 Authors@R: 
     person("Fabio", "Votta", , "fabio.votta@gmail.com", role = c("aut", "cre"),
            comment = "")
