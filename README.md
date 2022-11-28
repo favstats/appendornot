@@ -74,7 +74,15 @@ All of these cases will be automatically handled by the `save_csv`
 function:
 
 ``` r
-save_csv(cars, "cars.csv")
+save_csv(new_column_dat, "cars.csv")
+```
+
+``` r
+save_csv(different_order, "cars.csv")
+```
+
+``` r
+save_csv(different_order_newcolumn, "cars.csv")
 ```
 
 ## Example `save_lines()`
