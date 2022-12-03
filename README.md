@@ -46,12 +46,12 @@ save_csv(cars, "cars.csv")
 ```
 
 You can also create a folder (if it doesn’t exist yet) before it saves
-the csv.
+the csv. Just specify: `create_subfolders = TRUE`.
 
 This example creates the “`data`” folder first, then saves the file:
 
 ``` r
-save_csv(cars, "data/cars.csv")
+save_csv(cars, "data/cars.csv", create_subfolders = TRUE)
 ```
 
 ### Different order and new variables to be appended (or are missing)

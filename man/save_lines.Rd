@@ -4,14 +4,14 @@
 \alias{save_lines}
 \title{Write (new) lines and append if it already exists}
 \usage{
-save_lines(l, path, create_subfolders)
+save_lines(l, path, create_subfolders = FALSE)
 }
 \arguments{
 \item{l}{The lines you want to write}
 
 \item{path}{The path you want to save the csv to}
 
-\item{create_subfolders}{defaults to \code{TRUE}. Will create any subfolders you specify in \code{path}.}
+\item{create_subfolders}{defaults to \code{FALSE}. Will create any subfolders you specify in \code{path}.}
 }
 \description{
 This function writes a text file, creates the necessary (sub-)folders and appends the .csv data if it already is present.
