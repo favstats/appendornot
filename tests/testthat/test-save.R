@@ -23,7 +23,7 @@ expect_equal(readr::read_csv(test_file), rbind(tibble::tibble(x = 11:15, y = 21:
 test_file2 <- "data/test.csv"
 
 # check if the function creates subfolders correctly
-save_csv(data.frame(x = 16:20, y = 26:30), test_file2)
+save_csv(data.frame(x = 16:20, y = 26:30), test_file2, create_subfolders = T)
 expect_true(file.exists(test_file2))
 
 # check if the function handles new columns correctly

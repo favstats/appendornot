@@ -3,7 +3,7 @@
 #' \cr \cr Be aware this WILL create new subfolders by default if you specify folders that don't exist. If you don't want this behavior turn it off with \code{create_subfolders = FALSE}.
 #' @param d The dataset you want to write
 #' @param path The path you want to save the csv to
-#' @param create_subfolders defaults to `TRUE`. Will create any subfolders you specify in \code{path}.
+#' @param create_subfolders defaults to `FALSE`. Will create any subfolders you specify in \code{path}.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -19,7 +19,7 @@
 #' @importFrom readr write_csv
 #' @importFrom stringr str_split str_detect str_count
 #' @importFrom purrr discard
-save_csv <- function(d, path, create_subfolders = T) {
+save_csv <- function(d, path, create_subfolders = FALSE) {
   if (file.exists(path)) {
     appendit <- T
 
@@ -98,7 +98,7 @@ add_columns <- function(df, columns) {
 #' \cr \cr Be aware this WILL create new subfolders by default if you specify folders that don't exist. If you don't want this behavior turn it off with \code{create_subfolders = FALSE}.
 #' @param l The lines you want to write
 #' @param path The path you want to save the csv to
-#' @param create_subfolders defaults to `TRUE`. Will create any subfolders you specify in \code{path}.
+#' @param create_subfolders defaults to `FALSE`. Will create any subfolders you specify in \code{path}.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -114,7 +114,7 @@ add_columns <- function(df, columns) {
 #' @importFrom readr write_lines
 #' @importFrom stringr str_split str_detect str_count
 #' @importFrom purrr discard
-save_lines <- function(l, path, create_subfolders) {
+save_lines <- function(l, path, create_subfolders = FALSE) {
   if (file.exists(path)) {
     readr::write_lines(l, append = T, file = path, sep = "\n")
   } else {
