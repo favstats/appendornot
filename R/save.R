@@ -85,7 +85,7 @@ add_columns <- function(df, columns) {
   columns %>%
     purrr::map_dfr(~ {
       df %>%
-        mutate(
+        dplyr::mutate(
           {{ .x }} := NA
         )
     })
