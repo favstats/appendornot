@@ -37,7 +37,7 @@ save_csv <- function(d, path, create_subfolders = FALSE) {
     }
 
     ## check if there are names in the new data that werent in the csv
-    if (length(names(d)) >= length(the_names)) {
+    if (length(names(d)) > length(the_names)) {
       new_names <- names(d) %>%
         setdiff(the_names)
 
