@@ -1,79 +1,89 @@
-#' @title Write (new) csv and append if it already exists
-#' @description This function writes a csv, creates the necessary (sub-)folders and appends the .csv data if it already is present.
-#' \cr \cr Be aware this WILL create new subfolders by default if you specify folders that don't exist. If you don't want this behavior turn it off with \code{create_subfolders = FALSE}.
-#' @param d The dataset you want to write
-#' @param path The path you want to save the csv to
-#' @param create_subfolders defaults to `FALSE`. Will create any subfolders you specify in \code{path}.
+#' Save and Append Data to CSV with Column Matching and Duplicate Removal
+#'
+#' This function appends a dataset to an existing CSV file while ensuring column consistency,
+#' optionally removing duplicate rows and ignoring specified columns when checking for duplicates.
+#'
+#' @param d A data frame or tibble to be saved.
+#' @param path A character string specifying the file path to save the dataset.
+#' @param create_subfolders Logical. If `TRUE`, creates necessary subfolders if they do not exist.
+#' @param remove_duplicates Logical. If `TRUE`, removes exact duplicate rows (excluding ignored columns).
+#' @param ignore_columns Character vector. Columns to be ignored when checking for duplicates (e.g., timestamps).
+#'
+#' @details
+#' - If the file does not exist, it creates a new CSV file.
+#' - If the file exists, the function ensures the new dataset has all required columns.
+#' - Missing columns in either dataset are added with `NA` values.
+#' - The function ensures column order remains consistent before appending.
+#' - If `remove_duplicates = TRUE`, exact duplicate rows are removed, excluding columns specified in `ignore_columns`.
+#'
 #' @examples
 #' \dontrun{
-#' if (interactive()) {
-#'   ## write the csv (or append if it already exists)
-#'   save_csv(cars, "cars.csv")
+#' df <- data.frame(id = 1:5, value = c(10, 20, 30, 40, 50), timestamp = Sys.time())
+#' save_dataset(df, "data.csv", create_subfolders = TRUE, remove_duplicates = TRUE, ignore_columns = "timestamp")
+#' }
 #'
-#'   ## create a folder called "data" (if it doesn't exist yet) before it saves the csv
-#'   save_csv(cars, "data/cars.csv")
-#' }
-#' }
-#' @export
-#' @rdname save_csv
-#' @importFrom readr write_csv
-#' @importFrom stringr str_split str_detect str_count
+#' @importFrom readr read_csv write_csv
+#' @importFrom data.table rbindlist
+#' @importFrom dplyr select distinct all_of
+#' @importFrom stringr str_split str_detect
 #' @importFrom purrr discard
-save_csv <- function(d, path, create_subfolders = FALSE) {
+#' @export
+save_csv <- function(d, path, create_subfolders = FALSE,
+                         remove_duplicates = FALSE, ignore_columns = NULL) {
+
   if (file.exists(path)) {
-    appendit <- T
+    # Read existing data
+    old_data <- readr::read_csv(path, show_col_types = FALSE)
+    old_names <- names(old_data)
+    new_names <- names(d)
 
-    # write_csv(cars %>% select(dist, everything()), "cars.csv")
-    the_names <- names(readr::read_csv(path, n_max = 0, show_col_types = FALSE))
-
-    # d <- cars
-
-
-    ## check if there are names in the csv that werent in new data
-    if (!all(the_names %in% names(d))) {
-      d <- the_names %>%
-        setdiff(names(d)) %>%
-        add_columns(d, .)
+    # Ensure new data has all old columns (add missing ones as NA)
+    missing_old_cols <- setdiff(old_names, new_names)
+    if (length(missing_old_cols) > 0) {
+      d[missing_old_cols] <- NA
     }
 
-    ## check if there are names in the new data that werent in the csv
-    if (length(names(d)) > length(the_names)) {
-      new_names <- names(d) %>%
-        setdiff(the_names)
-
-      old_d <- readr::read_csv(path, show_col_types = FALSE)
-
-      bind_em <- list(d, old_d)
-      d <- data.table::rbindlist(bind_em, use.names = T, fill = T)
-
-      the_names <- c(the_names, new_names)
-
-      appendit <- F
+    # Ensure old data has all new columns (add missing ones as NA)
+    missing_new_cols <- setdiff(new_names, old_names)
+    if (length(missing_new_cols) > 0) {
+      old_data[missing_new_cols] <- NA
     }
 
-    ## check if the order is the same
-    if (!any(names(d) == the_names)) {
-      d <- d %>%
-        dplyr::select(dplyr::all_of(the_names))
-    }
+    # Ensure consistent column order
+    final_col_order <- union(old_names, new_names)
+    d <- d[, final_col_order, drop = FALSE]
+    old_data <- old_data[, final_col_order, drop = FALSE]
 
-    if (appendit) {
-      readr::write_csv(d, append = T, file = path)
-    } else if (!appendit) {
-      readr::write_csv(d, file = path)
-    }
-  } else {
-    if (create_subfolders) {
-      dirs_to_create <- stringr::str_split(path, "\\/") %>%
-        unlist() %>%
-        purrr::discard(~ stringr::str_detect(.x, "\\.")) %>%
-        paste0(collapse = "/")
+    # Bind datasets together
+    combined_data <- data.table::rbindlist(list(old_data, d), use.names = TRUE, fill = TRUE)
 
-      if (stringr::str_count(dirs_to_create) != 0) {
-        dir.create(dirs_to_create, recursive = T)
+    # Remove duplicates if requested
+    if (remove_duplicates) {
+      if (!is.null(ignore_columns)) {
+        keep_columns <- setdiff(names(combined_data), ignore_columns)
+        if (length(keep_columns) > 0) {
+          combined_data <- combined_data %>% dplyr::distinct(dplyr::across(dplyr::all_of(keep_columns)), .keep_all = TRUE)
+        } else {
+          warning("All columns were ignored for deduplication, skipping deduplication step.")
+        }
+      } else {
+        combined_data <- combined_data %>% dplyr::distinct()
       }
     }
 
+    # Overwrite file with cleaned data
+    readr::write_csv(combined_data, file = path)
+
+  } else {
+    # Create necessary directories if required
+    if (create_subfolders) {
+      dir_path <- dirname(path)
+      if (!dir.exists(dir_path)) {
+        dir.create(dir_path, recursive = TRUE)
+      }
+    }
+
+    # Write new file
     readr::write_csv(d, file = path)
   }
 }

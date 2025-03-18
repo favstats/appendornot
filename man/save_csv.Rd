@@ -2,29 +2,44 @@
 % Please edit documentation in R/save.R
 \name{save_csv}
 \alias{save_csv}
-\title{Write (new) csv and append if it already exists}
+\title{Save and Append Data to CSV with Column Matching and Duplicate Removal}
 \usage{
-save_csv(d, path, create_subfolders = FALSE)
+save_csv(
+  d,
+  path,
+  create_subfolders = FALSE,
+  remove_duplicates = FALSE,
+  ignore_columns = NULL
+)
 }
 \arguments{
-\item{d}{The dataset you want to write}
+\item{d}{A data frame or tibble to be saved.}
 
-\item{path}{The path you want to save the csv to}
+\item{path}{A character string specifying the file path to save the dataset.}
 
-\item{create_subfolders}{defaults to \code{FALSE}. Will create any subfolders you specify in \code{path}.}
+\item{create_subfolders}{Logical. If \code{TRUE}, creates necessary subfolders if they do not exist.}
+
+\item{remove_duplicates}{Logical. If \code{TRUE}, removes exact duplicate rows (excluding ignored columns).}
+
+\item{ignore_columns}{Character vector. Columns to be ignored when checking for duplicates (e.g., timestamps).}
 }
 \description{
-This function writes a csv, creates the necessary (sub-)folders and appends the .csv data if it already is present.
-\cr \cr Be aware this WILL create new subfolders by default if you specify folders that don't exist. If you don't want this behavior turn it off with \code{create_subfolders = FALSE}.
+This function appends a dataset to an existing CSV file while ensuring column consistency,
+optionally removing duplicate rows and ignoring specified columns when checking for duplicates.
+}
+\details{
+\itemize{
+\item If the file does not exist, it creates a new CSV file.
+\item If the file exists, the function ensures the new dataset has all required columns.
+\item Missing columns in either dataset are added with \code{NA} values.
+\item The function ensures column order remains consistent before appending.
+\item If \code{remove_duplicates = TRUE}, exact duplicate rows are removed, excluding columns specified in \code{ignore_columns}.
+}
 }
 \examples{
 \dontrun{
-if (interactive()) {
-  ## write the csv (or append if it already exists)
-  save_csv(cars, "cars.csv")
+df <- data.frame(id = 1:5, value = c(10, 20, 30, 40, 50), timestamp = Sys.time())
+save_dataset(df, "data.csv", create_subfolders = TRUE, remove_duplicates = TRUE, ignore_columns = "timestamp")
+}
 
-  ## create a folder called "data" (if it doesn't exist yet) before it saves the csv
-  save_csv(cars, "data/cars.csv")
-}
-}
 }
